@@ -18,4 +18,6 @@ public interface AuthInfo {
     boolean updateAuthInfo();
     boolean updateAuthInfo(Response response);
     String formateUrl();
+
+    void dump(StringBuffer sb);
 }

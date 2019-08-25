@@ -100,4 +100,9 @@ public class TokenAuthResponseInfo implements AuthInfo{
     public String formateUrl() {
         return null;
     }
+
+    @Override
+    public void dump(StringBuffer sb) {
+
+    }
 }

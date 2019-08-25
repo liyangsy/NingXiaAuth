@@ -48,7 +48,12 @@ public class TokenAuthRequestInfo implements AuthInfo {
         return sb.toString();
     }
 
-        public String formateRefreshTokenUrl(){
+    @Override
+    public void dump(StringBuffer sb) {
+
+    }
+
+    public String formateRefreshTokenUrl(){
             nns_func = "scaaa_refresh_token";
             StringBuffer sb = new StringBuffer();
             NodeAuth mAuth = mDeviceAuthResponseInfo.getDeviceAuthResponseInfo_Auth();

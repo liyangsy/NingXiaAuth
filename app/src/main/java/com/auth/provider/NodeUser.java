@@ -3,13 +3,14 @@ package com.auth.provider;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class NodeUser implements NodeBase {
+public class NodeUser extends NodeBase {
+    private static final String TAG = "NodeUser";
     public static String ID = "id";
     public static String NAME = "name";
     public static String PASSWORD = "password";
     public static String RANK = "rank";
     public static String EMAIL = "email";
-    public static String TELEPHOME = "telephome";
+    public static String TELEPHONE = "telephone";
     public static String ADDR = "addr";
     public static String AGE = "age";
     public static String SEX = "sex";
@@ -40,7 +41,7 @@ public class NodeUser implements NodeBase {
     public String password = null;
     public String rank = null;
     public String email = null;
-    public String telephome = null;
+    public String telephone = null;
     public String addr = null;
     public String age = null;
     public String sex = null;
@@ -64,13 +65,17 @@ public class NodeUser implements NodeBase {
     public String nns_last_login_version = null;
     public String nns_last_login_mac = null;
 
+    NodeUser() {
+        super(TAG);
+    }
+
     @Override
     public void updateNodeInfo(JSONObject obj) throws JSONException {
         id = obj.getString(NodeUser.ID);
         name = obj.getString(NodeUser.NAME);
         rank = obj.getString(NodeUser.RANK);
         email = obj.getString(NodeUser.EMAIL);
-        telephome = obj.getString(NodeUser.TELEPHOME);
+        telephone = obj.getString(NodeUser.TELEPHONE);
         addr = obj.getString(NodeUser.ADDR);
         age = obj.getString(NodeUser.AGE);
         sex = obj.getString(NodeUser.SEX);
@@ -95,5 +100,38 @@ public class NodeUser implements NodeBase {
         area_code = obj.getString(NodeUser.AREA_CODE);
         nns_last_login_version = obj.getString(NodeUser.NNS_LAST_LOGIN_VERSION);
         nns_last_login_mac = obj.getString(NodeUser.NNS_LAST_LOGIN_MAC);
+
+        addToMap();
+    }
+
+    @Override
+    void addToMap() {
+        mMap.put(ID, id);
+        mMap.put(NAME, name);
+        mMap.put(RANK, rank);
+        mMap.put(EMAIL, email);
+        mMap.put(TELEPHONE, telephone);
+        mMap.put(ADDR, addr);
+        mMap.put(AGE, age);
+        mMap.put(SEX, sex);
+        mMap.put(OCCUPATION, occupation);
+        mMap.put(DEVICE_ID, device_id);
+        mMap.put(HEADIMGURL, headimgurl);
+        mMap.put(FIRST_USE_TIME, first_use_time);
+        mMap.put(ATTRIBUTION, attribution);
+        mMap.put(USER_FROM, user_from);
+        mMap.put(USER_LEVEL, user_level);
+        mMap.put(BOSS_USER_GROUP, boss_user_group);
+        mMap.put(USER_GROWTH_VALUE, user_growth_value);
+        mMap.put(USER_LEVEL_BEGIN_TIME, user_level_begin_time);
+        mMap.put(USER_LEVEL_END_TIME, user_level_end_time);
+        mMap.put(BOSS_TOP_BOX_ID, boss_top_box_id);
+        mMap.put(USER_IS_CATEGORY, user_is_category);
+        mMap.put(BOSS_AREA_CODE, boss_area_code);
+        mMap.put(BOSS_AREA_BIND, boss_area_bind);
+        mMap.put(AREA_CODE, area_code);
+        mMap.put(NNS_LAST_LOGIN_VERSION, nns_last_login_version);
+        mMap.put(NNS_LAST_LOGIN_MAC, nns_last_login_mac);
+        super.addToMap();
     }
 }

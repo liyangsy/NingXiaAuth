@@ -26,7 +26,6 @@ public class AuthManager {
     }
 
     public void startDeviceAuth(){
-
         mHttpManager.setCallBack(new DeviceAuthCallBack());
         mHttpManager.postUrl(new DeviceAuthRequestInfo().formateUrl(), null);
         mDataAccessHandler.sendEmptyMessage(DataAccessService.ACTION_DEVICE_AUTH_STARTED);

@@ -22,8 +22,6 @@ import com.thirdparty.dataaccess.IDataAccess;
 public class DataAccessService extends Service {
     private static final String TAG = "DataAccessService";
 
-
-
     public final static int ACTION_NET_CONNECTED = 1;
 
     public final static int ACTION_DEVICE_AUTH_STARTED = 5;
