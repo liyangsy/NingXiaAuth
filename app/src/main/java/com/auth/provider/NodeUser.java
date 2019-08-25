@@ -3,6 +3,9 @@ package com.auth.provider;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Iterator;
+import java.util.Map;
+
 public class NodeUser extends NodeBase {
     private static final String TAG = "NodeUser";
     public static String ID = "id";
@@ -133,5 +136,19 @@ public class NodeUser extends NodeBase {
         mMap.put(NNS_LAST_LOGIN_VERSION, nns_last_login_version);
         mMap.put(NNS_LAST_LOGIN_MAC, nns_last_login_mac);
         super.addToMap();
+    }
+
+    @Override
+    void dump(StringBuffer sb) {
+        sb.append(TAG).append("\r\n");
+        Iterator it = mMap.entrySet().iterator();
+        while (it.hasNext()){
+            Map.Entry entry = (Map.Entry) it.next();
+            String key = (String) entry.getKey();
+            String val = (String) entry.getValue();
+            sb.append(key).append("=").append(val).append("\r\n");
+        }
+
+        mNodeUserVipLevelDetailInfo.dump(sb);
     }
 }
