@@ -109,7 +109,7 @@ public class DataAccessService extends Service {
             public void onReceive(Context context, Intent intent) {
                 if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)){
                     if(intent.hasExtra(ConnectivityManager.EXTRA_NETWORK_INFO)){
-                        NetworkInfo mNetworkInfo = (NetworkInfo)intent.getExtras(ConnectivityManager.EXTRA_NETWORK_INFO);
+                        NetworkInfo mNetworkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
                         if (mNetworkInfo.isConnected()){
                             Log.d(TAG, "Network is ok, then begin to device auth");
                             mHandler.sendEmptyMessage(ACTION_NET_CONNECTED);
