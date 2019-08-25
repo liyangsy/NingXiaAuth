@@ -53,4 +53,9 @@ public final class DeviceAuthRequestInfo implements AuthInfo {
                 .append(SUFFIX);
         return sb.toString();
     }
+
+    @Override
+    public void dump(StringBuffer sb) {
+
+    }
 }
