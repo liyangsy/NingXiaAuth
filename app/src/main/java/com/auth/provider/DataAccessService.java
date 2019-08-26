@@ -46,9 +46,11 @@ public class DataAccessService extends Service {
     private DataAccessServiceBinder binder;
     private BroadcastReceiver mBroadcastReceiver = null;
     private IntentFilter mNetStateFilter = null;
-    private Handler mHandler = null;
+
     private Context mContext = null;
     private SystemInfo mSysInfo = null;
+    private AuthManager mAuthMananger =null;
+    private Handler mHandler = null;
 
 
 
@@ -61,12 +63,12 @@ public class DataAccessService extends Service {
         Log.d(TAG, "service onCreate");
         mContext = this.getApplicationContext();
         mSysInfo = SystemInfo.getInstance(mContext);
+        mAuthMananger = new AuthManager(this);
         initBroadcastReceiver();
-        final AuthManager mAuthMananger = new AuthManager(mContext, null, mHandler);
         mHandler = new Handler(this.getMainLooper()){
             @Override
             public void handleMessage(Message msg) {
-                Log.d(TAG,"Got msg: " + msg.what);
+                Log.d(TAG,"Got msg: " + toString(msg.what));
                 switch (msg.what){
                     case ACTION_GET_REMOTE_SERVER_START:
                         break;
@@ -76,7 +78,9 @@ public class DataAccessService extends Service {
                     case ACTION_NET_CONNECTED:
                         //net connected then should start device auth
                         //mAuthMananger.startDeviceAuth();
-                        mSysInfo.getRemoteServerAddr();
+//                        mSysInfo.getRemoteServerAddr();
+
+                        mAuthMananger.startDeviceAuth();
                         break;
                     case ACTION_DEVICE_AUTH_STARTED:
                         break;
@@ -97,10 +101,51 @@ public class DataAccessService extends Service {
                 }
                 super.handleMessage(msg);
             }
+
+            private  String toString(int what) {
+                String ret = null;
+                switch (what) {
+                    case ACTION_NET_CONNECTED:
+                        ret = "ACTION_NET_CONNECTED";
+                        break;
+                    case ACTION_DEVICE_AUTH_STARTED:
+                        ret = "ACTION_DEVICE_AUTH_STARTED";
+                        break;
+                    case ACTION_DEVICE_AUTH_DONE:
+                        ret = "ACTION_DEVICE_AUTH_DONE";
+                        break;
+                    case ACTION_TOKEN_AUTH_STARTED:
+                        ret = "ACTION_TOKEN_AUTH_STARTED";
+                        break;
+                    case ACTION_TOKEN_AUTH_DONE:
+                        ret = "ACTION_TOKEN_AUTH_DONE";
+                        break;
+                    case ACTION_TOKEN_REFRESH_STARED:
+                        ret = "ACTION_TOKEN_REFRESH_STARED";
+                        break;
+                    case ACTION_TOKEN_REFRESH_DONE:
+                        ret = "ACTION_TOKEN_REFRESH_DONE";
+                        break;
+                    default:
+                        ret = "not support";
+                        break;
+
+                }
+                return ret;
+            }
         };
         this.getApplicationContext().registerReceiver(mBroadcastReceiver, mNetStateFilter);
 
     }
+
+    public void sendEmptyMessage(int what){
+        mHandler.sendEmptyMessage(what);
+    }
+
+    public void sendMessage(Message msg){
+        mHandler.sendMessage(msg);
+    }
+
 
     public void initBroadcastReceiver(){
         binder = new DataAccessServiceBinder();

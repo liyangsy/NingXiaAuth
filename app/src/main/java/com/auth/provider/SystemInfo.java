@@ -2,6 +2,7 @@ package com.auth.provider;
 
 import android.content.Context;
 import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
 
 import java.util.HashMap;
@@ -44,24 +45,23 @@ public class SystemInfo {
 
     private static Map<String, String> dataMap = new HashMap<String, String>();
 
+    private static Handler mDataAccessServiceHander = null;
+
     private static SystemInfo mInstance = null;
 
     private SystemInfo(){
-        dataMap.put(KEY_STBID, Build.SERIAL);
+//        dataMap.put(KEY_STBID, Build.SERIAL);
+        dataMap.put(KEY_STBID, "000004640001197018015C4A1FFC7005");
         dataMap.put(KEY_STBTYPE, Build.MODEL);
-        dataMap.put(KEY_SOFTWARE_VERSION, Build.FINGERPRINT);
-        dataMap.put(KEY_MAC, "11:22:33:44:55:66");
+//        dataMap.put(KEY_SOFTWARE_VERSION, Build.FINGERPRINT);
+        dataMap.put(KEY_SOFTWARE_VERSION, "STB1.1.0");
+        dataMap.put(KEY_MAC, "5C4A1FFC7005");
         dataMap.put(KEY_VENDOR, Build.MANUFACTURER);
         dataMap.put(KEY_MP, "1");
-        dataMap.put(KEY_REMOTE_SERVER_HW,"183.235.3.110:8082");
+        dataMap.put(KEY_REMOTE_SERVER_HW,"10.100.0.52:58009");
+
     }
 
-    public static SystemInfo getInstance(Context context){
-        if (mInstance == null){
-            mInstance = new SystemInfo();
-        }
-        return mInstance;
-    }
 
     public static SystemInfo getInstance(){
         if(mInstance == null){
@@ -90,9 +90,10 @@ public class SystemInfo {
     public boolean containsKey(String key){
         return dataMap.containsKey(key);
     }
-
+    //do nothing right now
     public void getRemoteServerAddr(){
-
+        mDataAccessServiceHander.sendEmptyMessage(DataAccessService.ACTION_GET_REMOTE_SERVER_START);
+        mDataAccessServiceHander.sendEmptyMessage(DataAccessService.ACTION_GET_REMOTE_SERVER_DONE);
     }
 
 }

@@ -5,7 +5,7 @@ import com.squareup.okhttp.Response;
 public final class DeviceAuthRequestInfo implements AuthInfo {
     private final String TAG = "DeviceAuthInfo";
 
-    private final String NNS_FUNC = "nns_func";
+    private final String NNS_FUNC = "nns_func=";
     private final String NNS_DEVICE_ID = "&nns_device_id=";
     private final String NNS_MAC_ID = "&nns_mac_id=";
     private final String NNS_VERSION = "&nns_version=";
@@ -44,10 +44,10 @@ public final class DeviceAuthRequestInfo implements AuthInfo {
     @Override
     public String formateUrl() {
         StringBuffer sb = new StringBuffer();
-        sb.append(HTTP).append(SystemInfo.KEY_REMOTE_SERVER_HW)
+        sb.append(HTTP).append(mSystemInfo.getSystemInfor(SystemInfo.KEY_REMOTE_SERVER_HW,"xxxxxx"))
                 .append(DEVICE_AUTH_ADDR).append(NNS_FUNC)
                 .append(nns_func).append(NNS_DEVICE_ID)
-                .append(mSystemInfo.getSystemInfor(SystemInfo.KEY_DEVICE_ID,"1111111"))
+                .append(mSystemInfo.getSystemInfor(SystemInfo.KEY_STBID,"1111111"))
                 .append(NNS_MAC_ID).append(mSystemInfo.getSystemInfor(SystemInfo.KEY_MAC,"11:22:33:44:55:66"))
                 .append(NNS_VERSION).append(mSystemInfo.getSystemInfor(SystemInfo.KEY_SOFTWARE_VERSION, "123456"))
                 .append(SUFFIX);

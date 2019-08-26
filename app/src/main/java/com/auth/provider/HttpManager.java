@@ -75,6 +75,33 @@ public class HttpManager {
 
     }
 
+    public void get(String url){
+//        String temp = "http://192.168.0.100/debug/app-debug.apk";
+        Log.d(TAG, "get url: " + url);
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+
+        Call call = mOkHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                if (calback != null)
+                    calback.onFailure(request, e);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if(calback != null){
+                    calback.onResponse(response);
+                }
+            }
+        });
+
+    }
+
     public interface HttpCallBack extends Callback{
         @Override
         void onFailure(Request request, IOException e);
