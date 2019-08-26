@@ -1,5 +1,7 @@
 package com.auth.provider;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,6 +17,7 @@ public class NodeBossUser extends NodeBase {
 
     @Override
     public void updateNodeInfo(JSONObject obj) throws JSONException {
+        Log.d(TAG, "update BossUser node");
         id = obj.getString(NodeBossUser.ID);
 
         addToMap();

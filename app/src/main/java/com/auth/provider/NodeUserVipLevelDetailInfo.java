@@ -1,5 +1,7 @@
 package com.auth.provider;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,6 +37,7 @@ public class NodeUserVipLevelDetailInfo extends NodeBase {
 
     @Override
     public void updateNodeInfo(JSONObject obj) throws JSONException {
+        Log.d(TAG, "update user vip level detail info node");
         nns_id = obj.getString(NodeUserVipLevelDetailInfo.NNS_ID);
         nns_vip_level = obj.getString(NodeUserVipLevelDetailInfo.NNS_VIP_LEVEL);
         nns_status = obj.getString(NodeUserVipLevelDetailInfo.NNS_STATUS);

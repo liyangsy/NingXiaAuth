@@ -7,6 +7,8 @@ import com.squareup.okhttp.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 public class TokenAuthResponseInfo implements AuthInfo{
     private final String TAG = "TokenAuthResponseInfo";
     private NodeResult mNodeResult = null;
@@ -37,7 +39,7 @@ public class TokenAuthResponseInfo implements AuthInfo{
     @Override
     public boolean updateAuthInfo(Response response) {
         try {
-            JSONObject obj = new JSONObject(response.body().toString());
+            JSONObject obj = new JSONObject(response.body().string());
             JSONObject sub_result = obj.getJSONObject(SUB_NODE_RESULT);
             String result = sub_result.getString("result");
             if(result.equals(SUCCESS)){
@@ -48,9 +50,34 @@ public class TokenAuthResponseInfo implements AuthInfo{
         } catch (JSONException e) {
             Log.e(TAG, "Translate body to Json failed!");
             e.printStackTrace();
+            return false;
+        } catch (IOException e){
+            Log.e(TAG, "token auth response io exception");
+            return false;
         }
 
-        return false;
+        return true;
+    }
+
+    @Override
+    public boolean updateAuthInfo(String response) {
+        Log.d(TAG, "token auth response " + response);
+        try {
+            JSONObject obj = new JSONObject(response);
+            JSONObject sub_result = obj.getJSONObject(SUB_NODE_RESULT);
+            String result = sub_result.getString("state");
+            if(result.equals(SUCCESS)){
+                updateTokenAuthSuccess(obj);
+            }else{
+                updateTokenAuthFailed(obj);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Translate body to Json failed!");
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 
     private void updateTokenAuthSuccess(JSONObject obj){

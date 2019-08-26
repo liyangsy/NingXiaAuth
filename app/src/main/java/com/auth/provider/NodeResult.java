@@ -1,5 +1,7 @@
 package com.auth.provider;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +21,7 @@ public class NodeResult extends NodeBase {
 
     @Override
     public void updateNodeInfo(JSONObject obj) throws JSONException {
+        Log.d(TAG, "update Result node");
         reason = obj.getString(NodeResult.REASON);
         state = obj.getString(NodeResult.STATE);
         sub_state = obj.getString(NodeResult.SUB_STATE);

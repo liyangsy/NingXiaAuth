@@ -1,5 +1,7 @@
 package com.auth.provider;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,10 +26,11 @@ public class NodeDevice extends NodeBase {
 
     @Override
     public void updateNodeInfo(JSONObject obj) throws JSONException {
+        Log.d(TAG,"update Device node");
         id = obj.getString(NodeDevice.ID);
         name = obj.getString(NodeDevice.NAME);
         first_use_time = obj.getString(NodeDevice.FIRST_USE_TIME);
-        create_time = obj.getString(NodeDevice.FIRST_USE_TIME);
+        create_time = obj.getString(NodeDevice.CREATE_TIME);
         is_add_device = obj.getString(NodeDevice.IS_ADD_DEVICE);
 
         addToMap();

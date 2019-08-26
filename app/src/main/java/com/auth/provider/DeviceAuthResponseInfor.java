@@ -1,5 +1,6 @@
 package com.auth.provider;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.squareup.okhttp.Response;
@@ -46,13 +47,22 @@ public class DeviceAuthResponseInfor implements AuthInfo {
     }
 
     @Override
-    public  boolean updateAuthInfo(Response response) {
-        try {
-            Log.d(TAG,"liyang response: " + response.toString());
-            Log.d(TAG, "liyang " + response.body().string());
-//            String context = "{\"result\":{\"state\":300000,\"sub_state\":300003,\"reason\":\"\\u8bbe\\u5907\\u8ba4\\u8bc1\\u6210\\u529f \"},\"auth\":{\"web_token\":\"f3441a922714188811166e783840be0b\",\"expires_in\":602972,\"valid_time\":\"2019-09-02T16:00:15+0800\",\"refresh_time\":\"60480\"},\"user\":{\"id\":\"UT-test\",\"name\":\"\\u5929\\u9091\\u6d4b\\u8bd5\",\"rank\":\"1\",\"email\":\"\",\"telephone\":\"\",\"addr\":\"\",\"age\":\"\",\"sex\":\"\",\"occupation\":\"\",\"device_id\":\"000004640001197018015C4A1FFC7005\",\"headimgurl\":\"\",\"first_use_time\":\"\",\"attribution\":\"\",\"user_from\":\"1\",\"user_level\":\"0\",\"boss_user_group\":\"0\",\"user_growth_value\":\"\",\"boss_top_box_id\":\"\",\"user_is_category\":\"\",\"boss_area_code\":\"\",\"boss_area_bind\":\"NO\",\"area_code\":\"\",\"nns_last_login_version\":\"STB1.1.0\",\"nns_last_login_mac\":\"5C4A1FFC7005\"},\"device\":{\"id\":\"000004640001197018015C4A1FFC7005\",\"name\":\"000004640001197018015C4A1FFC7005\",\"first_use_time\":\"2019-08-26 16:30:43\",\"create_time\":\"2019-08-26 10:56:17\",\"is_add_device\":1},\"client_ip\":\"10.101.7.62\"}";
+    public boolean updateAuthInfo(Response response) {
+        return false;
+    }
 
-            JSONObject obj = new JSONObject(response.body().string());
+    @Override
+    public  boolean updateAuthInfo(String response) {
+        try {
+//            Log.d(TAG,"liyang response: " + response.toString());
+            Log.d(TAG, "liyang " + response);
+//            String context = "{\"result\":{\"state\":300000,\"sub_state\":300003,\"reason\":\"\\u8bbe\\u5907\\u8ba4\\u8bc1\\u6210\\u529f \"},\"auth\":{\"web_token\":\"f3441a922714188811166e783840be0b\",\"expires_in\":602972,\"valid_time\":\"2019-09-02T16:00:15+0800\",\"refresh_time\":\"60480\"},\"user\":{\"id\":\"UT-test\",\"name\":\"\\u5929\\u9091\\u6d4b\\u8bd5\",\"rank\":\"1\",\"email\":\"\",\"telephone\":\"\",\"addr\":\"\",\"age\":\"\",\"sex\":\"\",\"occupation\":\"\",\"device_id\":\"000004640001197018015C4A1FFC7005\",\"headimgurl\":\"\",\"first_use_time\":\"\",\"attribution\":\"\",\"user_from\":\"1\",\"user_level\":\"0\",\"boss_user_group\":\"0\",\"user_growth_value\":\"\",\"boss_top_box_id\":\"\",\"user_is_category\":\"\",\"boss_area_code\":\"\",\"boss_area_bind\":\"NO\",\"area_code\":\"\",\"nns_last_login_version\":\"STB1.1.0\",\"nns_last_login_mac\":\"5C4A1FFC7005\"},\"device\":{\"id\":\"000004640001197018015C4A1FFC7005\",\"name\":\"000004640001197018015C4A1FFC7005\",\"first_use_time\":\"2019-08-26 16:30:43\",\"create_time\":\"2019-08-26 10:56:17\",\"is_add_device\":1},\"client_ip\":\"10.101.7.62\"}";
+//            String temp = response.body().string();
+            if(TextUtils.isEmpty(response)){
+                Log.d(TAG, "liyang is empty");
+                return false;
+            }
+            JSONObject obj = new JSONObject(response);
             JSONObject sub_result = obj.getJSONObject(SUB_NODE_RESULT);
             String result = sub_result.getString("state");
             if(result.equals(SUCCESS)){
@@ -64,10 +74,10 @@ public class DeviceAuthResponseInfor implements AuthInfo {
             Log.e(TAG, "Translate json failed");
             e.printStackTrace();
             return false;
-        } catch (IOException e){
+        } /*catch (IOException e){
             Log.e(TAG, "ioexception");
             return false;
-        }
+        }*/
 
         return false;
     }
@@ -137,6 +147,10 @@ public class DeviceAuthResponseInfor implements AuthInfo {
 
     public NodeAuth getDeviceAuthResponseInfo_Auth(){
         return mAuth;
+    }
+
+    public NodeUser getDeviceAuthResponseInfo_User(){
+        return mUser;
     }
 
     private void updateBossUser(JSONObject obj) throws JSONException {

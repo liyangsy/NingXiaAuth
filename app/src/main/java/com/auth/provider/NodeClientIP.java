@@ -1,5 +1,7 @@
 package com.auth.provider;
 
+import android.util.Log;
+
 import org.json.JSONObject;
 
 public class NodeClientIP extends NodeBase {
@@ -17,6 +19,7 @@ public class NodeClientIP extends NodeBase {
     }
 
     public void updateNodeInfo(String obj){
+        Log.d(TAG, "update client ip Node");
         client_ip = obj;
 
         addToMap();

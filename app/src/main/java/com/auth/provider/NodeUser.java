@@ -1,5 +1,7 @@
 package com.auth.provider;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -74,6 +76,7 @@ public class NodeUser extends NodeBase {
 
     @Override
     public void updateNodeInfo(JSONObject obj) throws JSONException {
+        Log.d(TAG, "update User node");
         id = obj.getString(NodeUser.ID);
         name = obj.getString(NodeUser.NAME);
         rank = obj.getString(NodeUser.RANK);
@@ -91,11 +94,11 @@ public class NodeUser extends NodeBase {
         user_level = obj.getString(NodeUser.USER_LEVEL);
         boss_user_group = obj.getString(NodeUser.BOSS_USER_GROUP);
         // no deal with user_vip_level_detail_info right now
-        JSONObject temp = obj.getJSONObject(NodeUser.USER_VIP_LEVEL_DETAIL_INFO);
-        mNodeUserVipLevelDetailInfo.updateNodeInfo(temp);
+//        JSONObject temp = obj.getJSONObject(NodeUser.USER_VIP_LEVEL_DETAIL_INFO);
+//        mNodeUserVipLevelDetailInfo.updateNodeInfo(temp);
         user_growth_value = obj.getString(NodeUser.USER_GROWTH_VALUE);
-        user_level_begin_time = obj.getString(NodeUser.USER_LEVEL_BEGIN_TIME);
-        user_level_end_time = obj.getString(NodeUser.USER_LEVEL_END_TIME);
+//        user_level_begin_time = obj.getString(NodeUser.USER_LEVEL_BEGIN_TIME);
+//        user_level_end_time = obj.getString(NodeUser.USER_LEVEL_END_TIME);
         boss_top_box_id = obj.getString(NodeUser.BOSS_TOP_BOX_ID);
         user_is_category = obj.getString(NodeUser.USER_IS_CATEGORY);
         boss_area_code = obj.getString(NodeUser.BOSS_AREA_CODE);
@@ -136,6 +139,10 @@ public class NodeUser extends NodeBase {
         mMap.put(NNS_LAST_LOGIN_VERSION, nns_last_login_version);
         mMap.put(NNS_LAST_LOGIN_MAC, nns_last_login_mac);
         super.addToMap();
+    }
+
+    public String getUserId(){
+        return id;
     }
 
     @Override

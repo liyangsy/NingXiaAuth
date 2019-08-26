@@ -65,6 +65,7 @@ public class DataAccessService extends Service {
         mSysInfo = SystemInfo.getInstance(mContext);
         mAuthMananger = new AuthManager(this);
         initBroadcastReceiver();
+
         mHandler = new Handler(this.getMainLooper()){
             @Override
             public void handleMessage(Message msg) {

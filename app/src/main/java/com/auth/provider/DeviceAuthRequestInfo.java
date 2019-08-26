@@ -42,6 +42,12 @@ public final class DeviceAuthRequestInfo implements AuthInfo {
     }
 
     @Override
+    public boolean updateAuthInfo(String response) {
+        return false;
+    }
+
+
+    @Override
     public String formateUrl() {
         StringBuffer sb = new StringBuffer();
         sb.append(HTTP).append(mSystemInfo.getSystemInfor(SystemInfo.KEY_REMOTE_SERVER_HW,"xxxxxx"))

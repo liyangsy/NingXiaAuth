@@ -5,7 +5,7 @@ import com.squareup.okhttp.Response;
 public class TokenAuthRequestInfo implements AuthInfo {
     private final String TAG = "TokenAuthRequestInfo";
 
-    private final String NNS_FUNC = "nns_func";
+    private final String NNS_FUNC = "nns_func=";
     private final String NNS_USER_ID = "&nns_user_id=";
     private final String NNS_WEBTOKEN = "&nns_webtoken=";
     private final String NNS_VERSION = "&nns_version=";
@@ -36,12 +36,18 @@ public class TokenAuthRequestInfo implements AuthInfo {
     }
 
     @Override
+    public boolean updateAuthInfo(String response) {
+        return false;
+    }
+
+    @Override
     public String formateUrl() {
         StringBuffer sb = new StringBuffer();
         NodeAuth mAuth = mDeviceAuthResponseInfo.getDeviceAuthResponseInfo_Auth();
+        NodeUser mUser = mDeviceAuthResponseInfo.getDeviceAuthResponseInfo_User();
         sb.append(HTTP).append(mSystemInfo.getSystemInfor(SystemInfo.KEY_REMOTE_SERVER_HW, "1111111"))
                 .append(TOKEN_AUTH_ADDR).append(NNS_FUNC)
-                .append(nns_func).append(NNS_USER_ID).append(mSystemInfo.getSystemInfor(SystemInfo.KEY_USER_ID, "123"))
+                .append(nns_func).append(NNS_USER_ID).append(mUser.getUserId())
                 .append(NNS_WEBTOKEN).append(mAuth.getWebToken()).append(NNS_VERSION)
                 .append(mSystemInfo.getSystemInfor(SystemInfo.KEY_SOFTWARE_VERSION, "123456"))
                 .append(SUFFIX);

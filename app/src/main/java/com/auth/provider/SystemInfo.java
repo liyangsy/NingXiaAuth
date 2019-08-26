@@ -58,10 +58,20 @@ public class SystemInfo {
         dataMap.put(KEY_MAC, "5C4A1FFC7005");
         dataMap.put(KEY_VENDOR, Build.MANUFACTURER);
         dataMap.put(KEY_MP, "1");
-        dataMap.put(KEY_REMOTE_SERVER_HW,"10.100.0.52:58009");
+        //测试地址
+        dataMap.put(KEY_REMOTE_SERVER_HW,"10.100.0.7:58009");
+        //正式地址
+//        dataMap.put(KEY_REMOTE_SERVER_HW,"10.100.0.52:58009");
 
     }
 
+    public static SystemInfo getInstance(Context context){
+        if (mInstance == null){
+            mInstance = new SystemInfo();
+        }
+//        mDataAccessServiceHander = handler;
+        return mInstance;
+    }
 
     public static SystemInfo getInstance(){
         if(mInstance == null){

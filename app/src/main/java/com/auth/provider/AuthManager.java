@@ -64,13 +64,14 @@ public class AuthManager {
 
         @Override
         public void onResponse(Response response) throws IOException {
+            String body = response.body().string();
             DeviceAuthResponseInfor instance = DeviceAuthResponseInfor.getInstance();
-            instance.updateAuthInfo(response);
+            instance.updateAuthInfo(body);
             Message msg = Message.obtain();
             msg.what = DataAccessService.ACTION_DEVICE_AUTH_DONE;
             msg.arg1 = DataAccessService.RESULT_DEVICE_AUTH_SUCCESS;
-            msg.obj = response.body().toString();
-            Log.d(TAG, "Device auth success: " + response.body().toString());
+            msg.obj = body;
+            Log.d(TAG, "Device auth success: " + body);
             mDataService.sendMessage(msg);
 
         }
@@ -79,8 +80,9 @@ public class AuthManager {
     private class TokenAuthCallBack implements HttpManager.HttpCallBack{
         @Override
         public void onResponse(Response response) throws IOException {
+            String body = response.body().string();
             TokenAuthResponseInfo instance = TokenAuthResponseInfo.getInstance();
-            instance.updateAuthInfo(response);
+            instance.updateAuthInfo(body);
             Message msg = Message.obtain();
             msg.what = DataAccessService.ACTION_TOKEN_AUTH_DONE;
             msg.arg1 = DataAccessService.RESULT_TOKEN_AUTH_SUCCESS;
@@ -103,8 +105,9 @@ public class AuthManager {
     private class TokenRefreshCallBack implements HttpManager.HttpCallBack{
         @Override
         public void onResponse(Response response) throws IOException {
+            String body = response.body().string();
             TokenAuthResponseInfo instance = TokenAuthResponseInfo.getInstance();
-            instance.updateAuthInfo(response);
+            instance.updateAuthInfo(body);
             Message msg = Message.obtain();
             msg.what = DataAccessService.ACTION_TOKEN_REFRESH_DONE;
             msg.arg1 = DataAccessService.RESULT_TOKEN_REFRESH_SUCCESS;

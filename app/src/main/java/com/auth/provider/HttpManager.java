@@ -76,7 +76,7 @@ public class HttpManager {
     }
 
     public void get(String url){
-//        String temp = "http://192.168.0.100/debug/app-debug.apk";
+//        String temp = "http://10.100.0.7:58009/nxlt/AAAAuth?nns_func=scaaa_device_auth&nns_device_id=000004640001197018015C4A1FFC7005&nns_mac_id=5C4A1FFC7005&nns_version=STB1.1.0&nns_output_type=json";
         Log.d(TAG, "get url: " + url);
 
         Request request = new Request.Builder()
