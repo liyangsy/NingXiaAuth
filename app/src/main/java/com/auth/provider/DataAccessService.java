@@ -227,10 +227,9 @@ public class DataAccessService extends Service {
                 ret = mSysInfo.getSystemInfor(dataName, null);
             }else{
                 Log.d(TAG,"No data in map, get from database");
-//                SharedPreferences sp = getSharedPreferences(SP, Context.MODE_PRIVATE);
-//                ret = sp.getString(dataName, null);
                 ret = Settings.Global.getString(mContext.getContentResolver(), dataName);
             }
+            Log.d(TAG, "get STB data key: " + dataName + ":" + ret);
 
             return ret;
         }
@@ -244,10 +243,10 @@ public class DataAccessService extends Service {
 
             mSysInfo.setSystemInfo(dataName, value);
             Settings.Global.putString(mContext.getContentResolver(), dataName, value);
-            SharedPreferences sp = getSharedPreferences(SP, Context.MODE_PRIVATE);
+/*            SharedPreferences sp = getSharedPreferences(SP, Context.MODE_PRIVATE);
             SharedPreferences.Editor ed = sp.edit();
             ed.putString(dataName, value);
-            ed.commit();
+            ed.commit();*/
             return 1;
 
         }

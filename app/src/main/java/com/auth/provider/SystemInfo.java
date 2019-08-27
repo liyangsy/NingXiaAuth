@@ -8,6 +8,8 @@ import android.util.Log;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.os.SystemProperties;
+
 public class SystemInfo {
 
     private final String TAG = "SystemInfo";
@@ -39,6 +41,15 @@ public class SystemInfo {
     public final static String KEY_MP = "SupportMultiPlayer";
     //对接平台标示
     public final static String KEY_RESERVE = "Reserved";
+    public final static String PROP_MAC = "ro.mac";
+    public final static String PROP_STBID ="ro.tystbid";
+    public final static String PROP_VERSION = "ro.stb.version";
+    public final static String PROP_REMOTE_SERVER = "ro.remoteserver.ip";
+    public final static String PROP_TYPE = "ro.product.type";
+    public final static String PROP_DEVICEID = "ro.stb.device.id";
+    public final static String PROP_DEVICE_CODE = "ro.device.code";
+    public final static String PROP_MULTIPLAY_SUPPORT = "ro.product.multiPlayer";
+
 
     //服务器地址
     public final static String KEY_REMOTE_SERVER_HW = "remote_server";
@@ -49,22 +60,10 @@ public class SystemInfo {
 
     private static SystemInfo mInstance = null;
     //for test
-    public final static String KEY_MAC_SERVER = "mac";
+
 
     private SystemInfo(){
-//        dataMap.put(KEY_STBID, Build.SERIAL);
-        dataMap.put(KEY_STBID, "000004640001197018015C4A1FFC7005");
-        dataMap.put(KEY_STBTYPE, Build.MODEL);
-//        dataMap.put(KEY_SOFTWARE_VERSION, Build.FINGERPRINT);
-        dataMap.put(KEY_SOFTWARE_VERSION, "STB1.1.0");
-        dataMap.put(KEY_MAC, "5C4A1FFC7005");
-        dataMap.put(KEY_VENDOR, Build.MANUFACTURER);
-        dataMap.put(KEY_MP, "1");
-        //测试地址
-        dataMap.put(KEY_REMOTE_SERVER_HW,"10.100.0.7:58009");
-        //正式地址
-//        dataMap.put(KEY_REMOTE_SERVER_HW,"10.100.0.52:58009");
-        dataMap.put(KEY_MAC_SERVER, "5C4A1FFC7005");
+        updateSystemInfo();
     }
 
     public static SystemInfo getInstance(Context context){
@@ -88,6 +87,25 @@ public class SystemInfo {
             ret = dataMap.get(key);
         }
         return ret;
+    }
+
+    private void updateSystemInfo(){
+
+        dataMap.put(KEY_STBID, systemPropGet(PROP_STBID, "default"));
+        dataMap.put(KEY_STBTYPE, Build.MODEL);
+        dataMap.put(KEY_SOFTWARE_VERSION, systemPropGet(PROP_VERSION,"default"));
+        dataMap.put(KEY_MAC, systemPropGet(PROP_MAC,"default"));
+        dataMap.put(KEY_VENDOR, Build.MANUFACTURER);
+        dataMap.put(KEY_MP, systemPropGet(PROP_MULTIPLAY_SUPPORT, "default"));
+        //测试地址
+        dataMap.put(KEY_REMOTE_SERVER_HW, systemPropGet(PROP_REMOTE_SERVER, "localhost"));
+        //正式地址
+//        dataMap.put(KEY_REMOTE_SERVER_HW,"10.100.0.52:58009");
+
+    }
+
+    private String systemPropGet(String key, String def){
+        return SystemProperties.get(key, def);
     }
 
     public boolean setSystemInfo(String key, String val){
