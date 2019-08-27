@@ -6,7 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class NodeDevice extends NodeBase {
-    private static final String TAG = "NodeClientIP";
+    private static final String TAG = "NodeDevice";
     public static String ID = "id";
     public static String NAME = "name";
     public static String FIRST_USE_TIME = "first_use_time";

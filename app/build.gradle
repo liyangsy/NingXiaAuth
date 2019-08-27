@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        Release {
+            storeFile file('D:\\AndroidStudioproject\\platform.keystore')
+            storePassword '123456'
+            keyAlias = 'android'
+            keyPassword '123456'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.auth.provider"

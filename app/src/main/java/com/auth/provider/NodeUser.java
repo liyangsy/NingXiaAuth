@@ -142,7 +142,13 @@ public class NodeUser extends NodeBase {
     }
 
     public String getUserId(){
-        return id;
+        return getItem(ID);
+    }
+
+
+    @Override
+    public String getItem(String key) {
+        return mMap.get(key);
     }
 
     @Override

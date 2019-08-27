@@ -31,6 +31,11 @@ public class TokenAuthResponseInfo implements AuthInfo{
         }
         return mInstance;
     }
+
+    public NodeAuth getNodeAuth(){
+        return mNodeAuth;
+    }
+
     @Override
     public boolean updateAuthInfo() {
         return false;

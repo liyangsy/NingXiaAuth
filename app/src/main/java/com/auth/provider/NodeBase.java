@@ -30,4 +30,7 @@ public class NodeBase {
             sb.append(key).append("=").append(val).append("\r\n");
         }
     }
+    public String getItem(String key){
+        return null;
+    }
 }

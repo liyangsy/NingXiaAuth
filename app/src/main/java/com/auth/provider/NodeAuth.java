@@ -25,7 +25,7 @@ public class NodeAuth extends NodeBase {
     }
 
     public String getWebToken(){
-        return web_token;
+        return getItem(WEB_TOKEN);
     }
 
     @Override
@@ -48,5 +48,17 @@ public class NodeAuth extends NodeBase {
         mMap.put(REFRESH_TIME, refresh_time);
 //        mMap.put(TOKEN, token);
         super.addToMap();
+    }
+
+    public String getExpiresIn(){
+        return getItem(EXPIRES_IN);
+    }
+
+    public String getRefreshTime(){
+        return getItem(REFRESH_TIME);
+    }
+    @Override
+    public String getItem(String key) {
+        return mMap.get(key);
     }
 }

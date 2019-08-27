@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.RemoteException;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -39,6 +40,10 @@ public class DataAccessService extends Service {
 
     public final static int ACTION_GET_REMOTE_SERVER_START = 20;
     public final static int ACTION_GET_REMOTE_SERVER_DONE =21;
+
+    public final static int ACTION_REFREASH_TIME_CHECK = 25;
+    public final static int ACTION_REFRESH_TOKEN = 26;
+    public final static int ACTION_REAUTH_DEVICE = 27;
 
 
     private static final String SP = "data";
@@ -77,6 +82,7 @@ public class DataAccessService extends Service {
                         mAuthMananger.startDeviceAuth();
                         break;
                     case ACTION_NET_CONNECTED:
+                    case ACTION_REAUTH_DEVICE:
                         //net connected then should start device auth
                         //mAuthMananger.startDeviceAuth();
 //                        mSysInfo.getRemoteServerAddr();
@@ -86,15 +92,30 @@ public class DataAccessService extends Service {
                     case ACTION_DEVICE_AUTH_STARTED:
                         break;
                     case ACTION_DEVICE_AUTH_DONE:
+
                         mAuthMananger.startTokenAuth();
                         break;
+                    case ACTION_REFRESH_TOKEN:
+                        mAuthMananger.startTokenFresh();;
                     case ACTION_TOKEN_AUTH_STARTED:
                         break;
                     case ACTION_TOKEN_AUTH_DONE:
+                        mAuthMananger.storeInfoToSettings();
+                        sendEmptyMessage(ACTION_REFREASH_TIME_CHECK);
                         break;
                     case ACTION_TOKEN_REFRESH_STARED:
                         break;
                     case ACTION_TOKEN_REFRESH_DONE:
+//                        break;
+                    case ACTION_REFREASH_TIME_CHECK:
+
+                        mAuthMananger.checkAndSetRefreshTime();
+                        if(mReAuth){
+                            sendEmptyMessageDelayed(ACTION_REAUTH_DEVICE, mDelay * 1000);
+                        }else {
+                            sendEmptyMessageDelayed(ACTION_REFRESH_TOKEN,  mDelay * 1000);
+                        }
+
                         break;
                         default:
                             Log.w(TAG, "Not handled!");
@@ -146,6 +167,16 @@ public class DataAccessService extends Service {
     public void sendMessage(Message msg){
         mHandler.sendMessage(msg);
     }
+    /*
+    * delay 代表下次fresh间隔
+    * reAuth：true重新进行设备认证，false只需freshtoken即可
+    * */
+    private int mDelay = 0;
+    private boolean mReAuth = false;
+    public void setRefreshTokenTime(int delay, boolean reAuth){
+        mDelay = delay;
+        mReAuth = reAuth;
+    }
 
 
     public void initBroadcastReceiver(){
@@ -196,8 +227,9 @@ public class DataAccessService extends Service {
                 ret = mSysInfo.getSystemInfor(dataName, null);
             }else{
                 Log.d(TAG,"No data in map, get from database");
-                SharedPreferences sp = getSharedPreferences(SP, Context.MODE_PRIVATE);
-                ret = sp.getString(dataName, null);
+//                SharedPreferences sp = getSharedPreferences(SP, Context.MODE_PRIVATE);
+//                ret = sp.getString(dataName, null);
+                ret = Settings.Global.getString(mContext.getContentResolver(), dataName);
             }
 
             return ret;
@@ -211,7 +243,7 @@ public class DataAccessService extends Service {
             }
 
             mSysInfo.setSystemInfo(dataName, value);
-
+            Settings.Global.putString(mContext.getContentResolver(), dataName, value);
             SharedPreferences sp = getSharedPreferences(SP, Context.MODE_PRIVATE);
             SharedPreferences.Editor ed = sp.edit();
             ed.putString(dataName, value);
@@ -220,5 +252,12 @@ public class DataAccessService extends Service {
 
         }
 
+    }
+
+    public void storeInfoToSettings(NodeAuth auth, NodeUser user){
+        String token = auth.getWebToken();
+        String id = user.getUserId();
+        Settings.Global.putString(mContext.getContentResolver(),SystemInfo.KEY_USER_ID, id);
+        Settings.Global.putString(mContext.getContentResolver(),SystemInfo.KEY_TOKEN, token);
     }
 }

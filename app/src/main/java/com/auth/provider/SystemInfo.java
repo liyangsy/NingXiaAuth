@@ -48,6 +48,8 @@ public class SystemInfo {
     private static Handler mDataAccessServiceHander = null;
 
     private static SystemInfo mInstance = null;
+    //for test
+    public final static String KEY_MAC_SERVER = "mac";
 
     private SystemInfo(){
 //        dataMap.put(KEY_STBID, Build.SERIAL);
@@ -62,7 +64,7 @@ public class SystemInfo {
         dataMap.put(KEY_REMOTE_SERVER_HW,"10.100.0.7:58009");
         //正式地址
 //        dataMap.put(KEY_REMOTE_SERVER_HW,"10.100.0.52:58009");
-
+        dataMap.put(KEY_MAC_SERVER, "5C4A1FFC7005");
     }
 
     public static SystemInfo getInstance(Context context){

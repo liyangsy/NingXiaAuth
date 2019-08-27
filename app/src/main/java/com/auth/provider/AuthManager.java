@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.squareup.okhttp.Request;
@@ -12,12 +13,14 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 import java.util.Map;
 
+
 public class AuthManager {
     private final String TAG = "AuthManager";
 
     private HttpManager mHttpManager = null;
     private DataAccessService mDataService = null;
-
+    private DeviceAuthResponseInfor mDARI = null;
+    private TokenAuthResponseInfo mTARI = null;
 
     public AuthManager(DataAccessService service){
 
@@ -30,10 +33,8 @@ public class AuthManager {
         Log.d(TAG, "start DeviceAuth:" + new DeviceAuthRequestInfo().formateUrl());
         mHttpManager.setCallBack(new DeviceAuthCallBack());
         mHttpManager.get(new DeviceAuthRequestInfo().formateUrl());
-        Log.d(TAG, "send empty msg start");
         if (mDataService == null) Log.d(TAG, "handler is null");
         mDataService.sendEmptyMessage(DataAccessService.ACTION_DEVICE_AUTH_STARTED);
-        Log.d(TAG, "send empty msg end");
     }
     //TODO:这里面的参数是什么？
     public void startTokenAuth(){
@@ -48,6 +49,35 @@ public class AuthManager {
         mHttpManager.setCallBack(new TokenRefreshCallBack());
         mHttpManager.get(new TokenAuthRequestInfo().formateRefreshTokenUrl());
         mDataService.sendEmptyMessage(DataAccessService.ACTION_TOKEN_AUTH_STARTED);
+    }
+
+    public void checkAndSetRefreshTime(){
+        NodeAuth mAuth = TokenAuthResponseInfo.getInstance().getNodeAuth();
+        String expire = mAuth.getExpiresIn();
+        String refresh = mAuth.getRefreshTime();
+        StringBuffer sb = new StringBuffer();
+        mAuth.dump(sb);
+        Log.d(TAG, "Node Auth: " + sb.toString());
+        Log.d(TAG, "exp: " + expire + " ref:" + refresh);
+        int ret = 0;
+        boolean reAuth = false;
+        int expireTime = Integer.parseInt(expire);
+        int refreshTime = Integer.parseInt(refresh);
+        if (refreshTime < expireTime && expireTime < 2*refreshTime){
+            ret = expireTime - refreshTime;
+        }else if (refreshTime > expireTime){
+            ret = expireTime;
+            reAuth = true;
+        }else {
+            ret = refreshTime;
+        }
+        mDataService.setRefreshTokenTime(ret, reAuth);
+    }
+
+    public void storeInfoToSettings(){
+        NodeAuth auth = mDARI.getDeviceAuthResponseInfo_Auth();
+        NodeUser user = mDARI.getDeviceAuthResponseInfo_User();
+        mDataService.storeInfoToSettings(auth , user);
     }
 
     private class DeviceAuthCallBack implements HttpManager.HttpCallBack{
@@ -65,8 +95,8 @@ public class AuthManager {
         @Override
         public void onResponse(Response response) throws IOException {
             String body = response.body().string();
-            DeviceAuthResponseInfor instance = DeviceAuthResponseInfor.getInstance();
-            instance.updateAuthInfo(body);
+            mDARI = DeviceAuthResponseInfor.getInstance();
+            mDARI.updateAuthInfo(body);
             Message msg = Message.obtain();
             msg.what = DataAccessService.ACTION_DEVICE_AUTH_DONE;
             msg.arg1 = DataAccessService.RESULT_DEVICE_AUTH_SUCCESS;
@@ -81,8 +111,8 @@ public class AuthManager {
         @Override
         public void onResponse(Response response) throws IOException {
             String body = response.body().string();
-            TokenAuthResponseInfo instance = TokenAuthResponseInfo.getInstance();
-            instance.updateAuthInfo(body);
+            mTARI = TokenAuthResponseInfo.getInstance();
+            mTARI.updateAuthInfo(body);
             Message msg = Message.obtain();
             msg.what = DataAccessService.ACTION_TOKEN_AUTH_DONE;
             msg.arg1 = DataAccessService.RESULT_TOKEN_AUTH_SUCCESS;
@@ -106,8 +136,8 @@ public class AuthManager {
         @Override
         public void onResponse(Response response) throws IOException {
             String body = response.body().string();
-            TokenAuthResponseInfo instance = TokenAuthResponseInfo.getInstance();
-            instance.updateAuthInfo(body);
+            mTARI = TokenAuthResponseInfo.getInstance();
+            mTARI.updateAuthInfo(body);
             Message msg = Message.obtain();
             msg.what = DataAccessService.ACTION_TOKEN_REFRESH_DONE;
             msg.arg1 = DataAccessService.RESULT_TOKEN_REFRESH_SUCCESS;
